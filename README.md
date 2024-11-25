@@ -47,8 +47,38 @@ npm install
 ```
 
 3. Настройка Firebase:
-- Создайте проект в Firebase Console
-- Скопируйте конфигурацию в src/config/firebase.js
+Для настройки Firebase создайте файл `src/config/firebase.js` со следующим содержимым:
+
+```javascript
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+import { getAuth } from "firebase/auth";
+import { getFunctions, connectFunctionsEmulator } from "firebase/functions";
+import { getFirestore } from "firebase/firestore";
+
+const firebaseConfig = {
+  apiKey: "your-api-key",
+  authDomain: "your-project-id.firebaseapp.com",
+  projectId: "your-project-id",
+  storageBucket: "your-project-id.appspot.com",
+  messagingSenderId: "your-messaging-sender-id",
+  appId: "your-app-id",
+  measurementId: "your-measurement-id"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+export const auth = getAuth(app);
+export const functions = getFunctions(app);
+export const db = getFirestore(app);
+
+// Подключаем эмулятор для локальной разработки
+if (process.env.NODE_ENV === 'development') {
+  connectFunctionsEmulator(functions, 'localhost', 5001);
+}
+
+export default app;
 
 4. Запуск проекта:
 ```bash
